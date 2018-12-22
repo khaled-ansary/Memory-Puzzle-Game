@@ -3,7 +3,7 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [ToDo List](#ToDo List)
+* [ToDo List](#ToDoList)
 
 ## Instructions
 
@@ -24,7 +24,7 @@ To get started, open `js/app.js` and start building out the app's functionality
 * When the player starts a game, a displayed timer should also start. Once the player wins the game, the timer stops.
 * Game displays the current number of moves a user has made.
 * Application uses CSS to style components for the game.
-* All application components are usable across modern desktop, tablet, and phone browsers.
+* All application compon`__`ents are usable across modern desktop, tablet, and phone browsers.
 * Comments are present and effectively explain longer code procedure when necessary.
 * Code is formatted with consistent, logical, and easy-to-read formatting as described in the [Udacity JavaScript Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html).
 

@@ -81,6 +81,52 @@ h1 {
     font-size: 33px;
 }
 
+.deck .card.unmatched {
+    background: red;
+    cursor: default;
+}
+
+.deck .card.disabled {
+	pointer-events: none;
+}
+
+/* star color*/
+.fa-star {
+	color: #FF4400;
+}
+/*timer layout*/
+.timer {
+	display: inline-block;
+	margin: 2px;
+    padding-left: 20px;
+}
+
+#dialog {
+    text-align: center;
+}
+
+.congrats {
+    color: green;
+    font-size: 2em;
+    
+}
+
+.score {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.score .ratings {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px 0 0;
+}
+
+.score .ratings li {
+    list-style: none;
+    display: inline-block;
+}
+
 
 /*
  * Styles for the Score Panel

@@ -2,103 +2,145 @@
 const model = {
     icons: [
         {
-           icon: 'fa-anchor',
-           clickCount: 0,  
-           isMatched: false
+           icon: 'fa-anchor'
         },
         {
-            icon: 'fa-anchor',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-anchor' 
         },
         {
-            icon: 'fa-bicycle',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-bicycle'
         },
         {
-            icon: 'fa-bolt',
-            clickCount: 0,  
-            isMatched: false
+            icon: 'fa-bolt'
         },
         {
-            icon: 'fa-cube',
-            clickCount: 0,  
-            isMatched: false 
-         },
-         {
-             icon: 'fa-diamond',
-             clickCount: 0,  
-            isMatched: false  
-         },
-         {
-             icon: 'fa-diamond',
-             clickCount: 0,  
-            isMatched: false  
-         },
-         {
-             icon: 'fa-plane',
-             clickCount: 0,  
-            isMatched: false
-         },
-         {
-            icon: 'fa-leaf',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-cube' 
         },
         {
-            icon: 'fa-bomb',
-            clickCount: 0,  
-            isMatched: false
+            icon: 'fa-diamond'
         },
         {
-            icon: 'fa-leaf',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-diamond'
         },
         {
-            icon: 'fa-bomb',
-            clickCount: 0,  
-            isMatched: false
+            icon: 'fa-plane'
         },
         {
-            icon: 'fa-bolt',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-leaf'  
         },
         {
-            icon: 'fa-bicycle',
-            clickCount: 0,  
-            isMatched: false
+            icon: 'fa-bomb'
         },
         {
-            icon: 'fa-plane',
-            clickCount: 0,  
-            isMatched: false  
+            icon: 'fa-leaf'  
         },
         {
-            icon: 'fa-cube',
-            clickCount: 0,  
-            isMatched: false
+            icon: 'fa-bomb'
+        },
+        {
+            icon: 'fa-bolt'  
+        },
+        {
+            icon: 'fa-bicycle'
+        },
+        {
+            icon: 'fa-plane'  
+        },
+        {
+            icon: 'fa-cube'
         }
     ],
     moveCount: 0,
+    matchCount: 0,
     clickCount: 0,
-    openCards: []
+    openCards: [],
+    isTimerStart: false,
+    minute: 0,
+    second: 0,
+    hour: 0
 };
 
+var interval; // set global timer
 /** Octopus */
 const octopus = {
+    /**
+     * initalize function 
+     */
     init: function() {
+        cardView.reStart();
         cardView.init();
     },
 
-    incrementMovement: function() {
-        model.moveCount++;
+    /**
+     * call this function when click on the card
+     * @param {event} evt 
+     */
+    handlingCard(evt){
+        cardView.checkCard(evt);
     },
 
+    /**
+     * count total moves
+     */
+    movementCount: function() {
+        model.moveCount++;
+        cardView.displayMoves();
+    },
+
+    /**
+     * count total matching
+     */
+    matchingCount: function() {
+        model.matchCount++;
+        if( model.matchCount == 8) {
+            cardView.displayModel();
+        }
+    },
+
+    /**
+     * get Icon class name
+     * @param {card} card 
+     */
     getIconFromClass: function(card) {
         return card.firstChild.className;
+    },
+
+    /***
+     * return score for moves
+     */
+    getMoveScore: function() {
+        if (model.moveCount <=20) {
+            return 3;
+        } else if (model.moveCount >20 && model.moveCount < 30) {
+            return 2;
+        } else if (model.moveCount >=30){
+            return 1;
+        }
+    },
+
+    
+    /**
+    * @description Timer function initialization and definition
+    * The time parameters are set for the game
+    */
+    
+    startTimer: function () {
+        
+        interval = setInterval(function() {
+            cardView.displayTimer();
+            
+            model.second++;
+            if (model.second === 60) {
+                model.minute++;
+                model.second = 0;
+            }
+            if (model.minute === 60) {
+                model.hour++;
+                model.minute = 0;
+            }
+        }, 1000);
+
+        return interval;
     },
 
     /*
@@ -121,6 +163,24 @@ const octopus = {
         }
 
         return array;
+    },
+
+    /**
+     * Reset model and views
+     */
+    setReset: function(){
+        model.minute = 0;
+        model.second = 0; 
+        model.hour = 0;
+        model.isTimerStart = false;
+        model.openCards = [];
+        model.moveCount = 0;
+        model.matchCount = 0;
+        model.clickCount = 0;
+        clearInterval(interval); //clear time
+        cardView.setScore();
+        cardView.displayMoves();
+        cardView.displayTimer();
     }
 };
 
@@ -132,10 +192,19 @@ const cardView = {
     init: function() {
         /** select the container */
         const cardContainer = document.querySelector('.deck');
+        cardContainer.innerHTML = '';
         this.render(cardContainer);
-        model.openCards = [];
+        this.displayMoves();
+        
     },
 
+    reStart: function(){
+        const reset = document.querySelector('.restart');
+        reset.addEventListener('click', function (evt){
+           octopus.setReset();
+           cardView.init();
+        });
+    },
     /** render cards on the board */
     render: function(cardContainer) {
         
@@ -153,47 +222,138 @@ const cardView = {
             cardContainer.appendChild(li);
 
         });
-        cardContainer.addEventListener('click', this.clickCard);
+        /** set card click event */
+        cardContainer.addEventListener('click', function (evt){
+            if (evt.cardContainer == 2){
+                evt.stopPropagation();
+            } else{
+                // start timer when start playing
+                if (! model.isTimerStart) {
+                    octopus.startTimer();
+                    model.isTimerStart = true;
+                }
+                octopus.handlingCard(evt);
+            }
+        });
     },
 
-    clickCard: function(evt) {
+    /** display and compare cards */
+    checkCard: function(evt) {
 
+        // open first selected card
         if( model.openCards.length < 2){
             model.openCards[model.clickCount] = evt.target;
-            console.log(model.openCards);
-            evt.target.classList.add('open', 'show');
+            this.displayCard();
             model.clickCount++;
         } 
-        if (model.openCards.length === 2){
+        console.log(model.openCards);
+        /**
+         * open second selected card and compare it to the first selected card
+         */ 
 
+        if (model.openCards.length === 2){
             if (octopus.getIconFromClass(model.openCards[0]) === octopus.getIconFromClass(model.openCards[1])) {
-                model.openCards.forEach(card => {
-                    card.classList.add('open', 'show','match');
-                });
+               this.matched();
             } else {
-                model.openCards.forEach(card => {
-                    setTimeout( function (){
-                        card.classList.remove('open', 'show');
-                    }, 1000);
-                });
+               this.unmatched();
             }
             model.openCards = [];
             model.clickCount = 0;
         }        
-    
+        octopus.movementCount();
+        this.setScore();
     },
 
+    /**
+     * display selected card
+     */
+    displayCard: function() {
+        model.openCards.forEach(card =>{
+            card.classList.add('open', 'show','disabled');
+        });
+    },
+
+    /**
+     * this function call when two cards are not match
+     * and hide the cards
+     */
+    unmatched: function() {
+        model.openCards.forEach(card => {
+            card.classList.add('open', 'show', 'shake-little', 'unmatched');
+            setTimeout( function (){
+                card.classList.remove('open', 'show', 'shake-little', 'unmatched', 'disabled');
+            }, 1000);
+        });
+    },
+
+    /**
+     * this function call when two cards are match
+     * it lock the card and increment the matchingCount
+     */
+    matched: function() {
+        model.openCards.forEach(card =>{
+            card.classList.add('open', 'show', 'match');
+        });
+        octopus.matchingCount();
+    },
+
+    /**
+     * Display the total moves 
+     * @param {count the total movement} move 
+     */
+    displayMoves: function() {
+        const moveDisplaySpan = document.querySelector('.moves');
+        moveDisplaySpan.textContent = model.moveCount;
+    },
+
+    /**
+     * opem congratulation model dialog
+     */
+    displayModel: function() {
+        const dialogModel = document.querySelector('#dialog');
+        const congratsMessage = document.querySelector('.congrats');
+        const scoreText = document.querySelector('.scoreText');
+        const ratings = document.querySelector('.ratings');
+        const playAgain = document.querySelector('.play');
+        congratsMessage.textContent = 'Congratulations! You win the Game';
+        clearInterval(interval); //clear time
+        scoreText.textContent = `Total Moves ${model.moveCount} and Total Time takes ${model.minute} mins ${model.second} sec`;
+        ratings.innerHTML = document.querySelector('.stars').innerHTML;
+
+        playAgain.addEventListener('click', function (evt){
+            octopus.setReset();
+            cardView.init();
+            dialogModel.close();
+        });
+
+        dialogModel.showModal();
+
+    },
+
+    /**
+     * display timing
+     * @param {minute} min 
+     * @param {second} sec 
+     */
+    displayTimer: function() {
+        const timer = document.querySelector(".timer");
+        timer.innerHTML = model.minute + " mins " + model.second + " secs";
+    },
+
+    setScore: function() {
+        const stars = document.querySelector('.stars');
+        const star ='<li><i class="fa fa-star"></i></li>';
+        const star_o ='<li><i class="fa fa-star-o"></i></li>';
+        console.log(octopus.getMoveScore());
+        if(octopus.getMoveScore() === 3) {
+            stars.innerHTML = `${star}${star}${star}`;
+        } else if (octopus.getMoveScore() === 2) {
+            stars.innerHTML =  `${star}${star}${star_o}`;
+        }if (octopus.getMoveScore() === 1) {
+            stars.innerHTML = `${star}${star_o}${star_o}`;
+        } 
+    }
+
 };
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
-
- octopus.init();
+octopus.init();
+ 
