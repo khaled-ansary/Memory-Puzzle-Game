@@ -12,4 +12,8 @@ Live Demo https://khaled-ansary.github.io/Memory-Puzzle-Game/
   * if total moves in between 21 and  29, then rating is 2 stars
   * if total moves >=30, then rating is 1 star
  
- ## License
+## License
+
+The MIT License
+Copyright (c) Md Khaled Hossain Ansary, http://khaledansary.com
+[License] (LICENSE.md)
