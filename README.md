@@ -15,5 +15,7 @@ Live Demo https://khaled-ansary.github.io/Memory-Puzzle-Game/
 ## License
 
 The MIT License
-Copyright (c) Md Khaled Hossain Ansary, http://khaledansary.com
-[License] (LICENSE.md)
+
+Copyright (c) Md Khaled Hossain Ansary
+
+[License](LICENSE.md)
