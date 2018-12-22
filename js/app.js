@@ -169,18 +169,7 @@ const octopus = {
      * Reset model and views
      */
     setReset: function(){
-        model.minute = 0;
-        model.second = 0; 
-        model.hour = 0;
-        model.isTimerStart = false;
-        model.openCards = [];
-        model.moveCount = 0;
-        model.matchCount = 0;
-        model.clickCount = 0;
-        clearInterval(interval); //clear time
-        cardView.setScore();
-        cardView.displayMoves();
-        cardView.displayTimer();
+        window.location.reload();
     }
 };
 
@@ -195,7 +184,6 @@ const cardView = {
         cardContainer.innerHTML = '';
         this.render(cardContainer);
         this.displayMoves();
-        
     },
 
     reStart: function(){
@@ -246,7 +234,6 @@ const cardView = {
             this.displayCard();
             model.clickCount++;
         } 
-        console.log(model.openCards);
         /**
          * open second selected card and compare it to the first selected card
          */ 
@@ -321,9 +308,7 @@ const cardView = {
         ratings.innerHTML = document.querySelector('.stars').innerHTML;
 
         playAgain.addEventListener('click', function (evt){
-            octopus.setReset();
-            cardView.init();
-            dialogModel.close();
+            window.location.reload();
         });
 
         dialogModel.showModal();
@@ -353,7 +338,6 @@ const cardView = {
             stars.innerHTML = `${star}${star_o}${star_o}`;
         } 
     }
-
 };
 octopus.init();
  
