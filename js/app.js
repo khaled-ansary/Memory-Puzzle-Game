@@ -212,16 +212,14 @@ const cardView = {
         });
         /** set card click event */
         cardContainer.addEventListener('click', function (evt){
-            if (evt.cardContainer == 2){
-                evt.stopPropagation();
-            } else{
-                // start timer when start playing
-                if (! model.isTimerStart) {
-                    octopus.startTimer();
-                    model.isTimerStart = true;
-                }
-                octopus.handlingCard(evt);
+          
+            // start timer when start playing
+            if (! model.isTimerStart) {
+                octopus.startTimer();
+                model.isTimerStart = true;
             }
+            octopus.handlingCard(evt);
+            
         });
     },
 
