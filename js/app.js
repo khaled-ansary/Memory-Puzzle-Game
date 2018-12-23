@@ -1,6 +1,6 @@
 /** Model */
 const model = {
-    icons: [
+    icons: [ // list of card icons
         {
            icon: 'fa-anchor'
         },
@@ -50,12 +50,12 @@ const model = {
             icon: 'fa-cube'
         }
     ],
-    moveCount: 0,
-    matchCount: 0,
-    clickCount: 0,
-    openCards: [],
-    isTimerStart: false,
-    minute: 0,
+    moveCount: 0, // count pairs clicks
+    matchCount: 0, // count matching pairs
+    clickCount: 0, // count single pair clicks 
+    openCards: [], // store two pair card event
+    isTimerStart: false, // timer staring flag
+    minute: 0, 
     second: 0,
     hour: 0
 };
@@ -76,6 +76,10 @@ const octopus = {
      * @param {event} evt 
      */
     handlingCard(evt){
+        if (! model.isTimerStart) {
+            this.startTimer();
+            model.isTimerStart = true;
+        }
         cardView.checkCard(evt);
     },
 
@@ -109,11 +113,11 @@ const octopus = {
      * return score for moves
      */
     getMoveScore: function() {
-        if (model.moveCount <=20) {
+        if (model.moveCount <=10) {
             return 3;
-        } else if (model.moveCount >20 && model.moveCount < 30) {
+        } else if (model.moveCount >10 && model.moveCount <=20) {
             return 2;
-        } else if (model.moveCount >=30){
+        } else if (model.moveCount >20){
             return 1;
         }
     },
@@ -123,7 +127,6 @@ const octopus = {
     * @description Timer function initialization and definition
     * The time parameters are set for the game
     */
-    
     startTimer: function () {
         
         interval = setInterval(function() {
@@ -186,6 +189,9 @@ const cardView = {
         this.displayMoves();
     },
 
+    /**
+     * Restart the game
+     */
     reStart: function(){
         const reset = document.querySelector('.restart');
         reset.addEventListener('click', function (evt){
@@ -193,6 +199,7 @@ const cardView = {
            cardView.init();
         });
     },
+
     /** render cards on the board */
     render: function(cardContainer) {
         
@@ -200,26 +207,20 @@ const cardView = {
         const cards = octopus.shuffle(model.icons);
 
         /** display icons on card */
-        cards.forEach(icon => {
-            const li = document.createElement('li');
-            li.classList.add('card');
-            const i = document.createElement('i');
-            i.classList.add('fa', icon.icon);
+        cards.forEach(iconClass => {
+            const card = document.createElement('li');
+            card.classList.add('card');
+            const icon = document.createElement('i');
+            icon.classList.add('fa', iconClass.icon);
 
-            li.appendChild(i);
-            cardContainer.appendChild(li);
+            card.appendChild(icon);
 
-        });
-        /** set card click event */
-        cardContainer.addEventListener('click', function (evt){
-          
-            // start timer when start playing
-            if (! model.isTimerStart) {
-                octopus.startTimer();
-                model.isTimerStart = true;
-            }
-            octopus.handlingCard(evt);
-            
+            // add eventListener to each card
+            card.addEventListener('click', function(evt){
+                octopus.handlingCard(evt);
+            }, true);
+            cardContainer.appendChild(card);
+
         });
     },
 
@@ -244,8 +245,8 @@ const cardView = {
             }
             model.openCards = [];
             model.clickCount = 0;
+            octopus.movementCount();
         }        
-        octopus.movementCount();
         this.setScore();
     },
 
@@ -323,6 +324,9 @@ const cardView = {
         timer.innerHTML = model.minute + " mins " + model.second + " secs";
     },
 
+    /**
+     * reset Ratings
+     */
     setScore: function() {
         const stars = document.querySelector('.stars');
         const star ='<li><i class="fa fa-star"></i></li>';

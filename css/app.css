@@ -154,3 +154,59 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+@media screen and (min-width: 451px) and (max-width: 670px) {
+	.container {
+		width: auto;
+		padding: 0;
+		margin: 0;
+	}
+
+	.deck {
+		min-width: 0;
+		width: 90%;
+		min-height: 0;
+		height: auto;
+		margin: 0;
+		padding: 1em;
+	}
+
+	.deck .card {
+		height: 105px;
+		width: 24%;
+		margin: 0 0 5px;
+		padding: 0;
+	}
+
+	.score-panel {
+		width: 80%;
+	}
+}
+/** Responsive media query**/
+@media screen and (max-width: 450px) {
+	.container {
+		width: auto;
+		padding: 0;
+		margin: 0;
+	}
+
+	.deck {
+		min-width: 0;
+		width: 90%;
+		min-height: 0;
+		height: auto;
+		margin: 0;
+		padding: 1em;
+	}
+
+	.deck .card {
+		height: 90px;
+		width: 24%;
+		margin: 0 0 5px;
+		padding: 0;
+	}
+
+	.score-panel {
+		width: 80%;
+	}
+}
