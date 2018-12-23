@@ -19,7 +19,20 @@ The total score depends on the total number of moves and the time to finish the 
   * if total moves <= 20, then rating is 3 stars
   * if total moves in between 21 and  29, then rating is 2 stars
   * if total moves >=30, then rating is 1 star
-  
+
+### Game Features:
+* Match Cards are locked and display with light green color
+* Unmatched cards are little shakes with red color and disappear the with black screen
+* Count moves based on each pair card selected
+* When start the game the timer will start
+* Display ratings based on number of moves
+* Display dialog model with scores, moves and ratings when you win the Game
+
+### Used Technologies and Tools
+* HTML5
+* CSS
+* JavaScript 
+* Visual Studio Code
 ### Dependencies:
 
 * [Font Awesome](https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css).
